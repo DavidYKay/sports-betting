@@ -23,9 +23,9 @@
             [lein-midje "3.1.2"]
             [lein-beanstalk "0.2.7"]
             ]
-  :ring {:handler mma.handler/app}
+  :ring {:handler mma.core/app}
   :profiles {:dev {:dependencies [[ring-mock "0.1.5"]
                                   [midje "1.6-beta1"]
                                   ;[com.stuartsierra/lazytest "1.2.3"]
-                                  [lein-midje-lazytest "0.1.0"]
+                                  ;[lein-midje-lazytest "0.1.0"]
                                   ]}})
