@@ -14,7 +14,7 @@
 
 (defn- fractional-to-percent [fractional]
   (let [terms (map #(Integer/parseInt %) (split fractional #":"))]
-    (/ (first terms)
+    (/ (last terms)
        (reduce + terms))))
 
 (defn- american-to-percent [american]

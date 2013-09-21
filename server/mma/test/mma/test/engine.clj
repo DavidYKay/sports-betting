@@ -9,8 +9,8 @@
 
 (fact "Fractional odds compute correctly."
       (let [odds (FractionalOdds. "4:1" "1:6") ]
-        (a-wins? odds) => 4/5
-        (b-wins? odds) => 1/7
+        (a-wins? odds) => 1/5
+        (b-wins? odds) => 6/7
         ))
 
 (fact "Percent odds compute correctly."
@@ -21,6 +21,6 @@
 
 (fact "American odds compute correctly."
       (let [odds (AmericanOdds. -400 800)]
-        (a-wins? odds) => 1/5
-        (b-wins? odds) => 8/9
+        (a-wins? odds) => 4/5
+        (b-wins? odds) => 1/9
         ))
