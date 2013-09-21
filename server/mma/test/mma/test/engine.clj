@@ -23,4 +23,10 @@
       (let [odds (AmericanOdds. -400 800)]
         (a-wins? odds) => 4/5
         (b-wins? odds) => 1/9
-        ))
+        )
+
+      (let [odds (AmericanOdds. -200 600)]
+        (a-wins? odds) => 2/3
+        (b-wins? odds) => 1/7
+        )
+      )

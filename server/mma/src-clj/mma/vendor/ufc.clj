@@ -3,18 +3,12 @@
             [clj-http.client :as client]
             [clojure.string :as string]
             )
-  (:use [clojure.string :only [split trim]])
+  (:use [mma.vendor.common]
+        [clojure.string :only [split trim]])
   )
 
 (def DEFAULT-FIGHT-URL "http://www.ufc.com/event/UFC165")
 (def DEFAULT-FIGHTER-URL "http://www.ufc.com/fighter/Jon-Jones")
-
-(defn fetch-url [url]
-  (html/html-resource (java.net.URL. url)))
-
-(defn to-text [nodes]
-  (map (fn [x] (trim (html/text x)))
-       nodes))
 
 (defn get-fighter [url]
   (let [body (fetch-url url)
