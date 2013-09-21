@@ -1,10 +1,13 @@
 (ns mma.vendor.ufc
   (:require [net.cgrand.enlive-html :as html]
-            [clj-http.client :as client])
-  (:use [clojure.string :only [trim]])
+            [clj-http.client :as client]
+            [clojure.string :as string]
+            )
+  (:use [clojure.string :only [split trim]])
   )
 
 (def DEFAULT-FIGHT-URL "http://www.ufc.com/event/UFC165")
+(def DEFAULT-FIGHTER-URL "http://www.ufc.com/fighter/Jon-Jones")
 
 (defn fetch-url [url]
   (html/html-resource (java.net.URL. url)))
@@ -12,6 +15,21 @@
 (defn to-text [nodes]
   (map (fn [x] (trim (html/text x)))
        nodes))
+
+(defn get-fighter [url]
+  (let [body (fetch-url url)
+        skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
+        record  (split (trim (html/text (first (html/select body [:#fighter-skill-record]))) ) #"-")
+
+        weight (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-weight]))) #" ")))
+        age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
+        hometown (trim (string/replace (html/text (first (html/select body [:#fighter-from]))) #"\s+" " "))
+        ]
+    {:skills skills
+     :record record
+     :weight weight
+     :age age
+     :hometown hometown}))
 
 (defn get-names [doc]
   (let [select-and-trim (fn [selector] (map (fn [node]
@@ -29,7 +47,6 @@
          last-names)))
 
 (defn get-fight [url]
-  ;(let [body (fetch-url "http://www.ufc.com/event/UFC165")
   (let [body (fetch-url url)
         stat-texts  (html/select body [:div#fighter-stats :.stat-section :div.stat-text])
         stat-titles (html/select body [:div#fighter-stats :.stat-section :div.stat-title])
