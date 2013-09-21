@@ -1,4 +1,4 @@
-(ns mma.core-test
+(ns mma.test.core
   (:require [clojure.test :refer :all]
             [mma.core :refer :all]
             )
@@ -7,5 +7,5 @@
         ))
 
 (fact "Math Works yay"
-      (+ 1 1) => 3
+      (+ 1 1) => 2
       )

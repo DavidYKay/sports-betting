@@ -20,7 +20,6 @@
   (let [body (fetch-url url)
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
         record  (split (trim (html/text (first (html/select body [:#fighter-skill-record]))) ) #"-")
-
         weight (Integer/parseInt (nth (split (html/text (first (html/select body [:#fighter-weight]))) #" ") 3))
         height (Integer/parseInt (last (re-matches #".+ (\d+) cm .*" (html/text (first (html/select body [:#fighter-height]))))))
         age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
@@ -33,9 +32,7 @@
                       :height height
                       :age age
                       :hometown hometown
-                      :lives-in lives-in
-                      }
-        ]
+                      :lives-in lives-in}]
     ;weight
     ;height
     ;lives-in
