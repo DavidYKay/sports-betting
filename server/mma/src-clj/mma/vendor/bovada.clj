@@ -8,13 +8,17 @@
   )
 
 (defn get-odds [fight]
-  (let [body (fetch-url "http://sports.bovada.lv/sports-betting/mixed-martial-arts.jsp")
-        stat-texts  (html/select body [:#event-schedule])
-        ]
-    (binding [clj-http.core/*cookie-store* (clj-http.cookies/cookie-store)]
-      (client/get "http://sports.bovada.lv/sports-betting/mixed-martial-arts.jsp")
-      ;(client/get "http://sports.bovada.lv/sports-betting/mixed-martial-arts.jsp")
-      ;stat-texts
+  (binding [clj-http.core/*cookie-store* (clj-http.cookies/cookie-store)]
+    (let [body (html-string (:body (client/get "http://sports.bovada.lv/sports-betting/mixed-martial-arts.jsp")))
+          event-schedule  (html/select body [:#event-schedule])
+          raw-names (map html/text (html/select body [:div.competitor-name-props :span.left]))
+          names (filter (fn [n]
+                          (if (or (substring? #".*aired.*" n)
+                                  (substring? #".*Live.*" n))
+                            false
+                            true))
+                        raw-names)
+          odds (map html/text (html/select body [:a.lineOdd]))
+          ]
+      (partition 2 (map vector names odds))
       )))
-
-
