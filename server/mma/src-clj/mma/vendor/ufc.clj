@@ -14,26 +14,19 @@
        nodes))
 
 (defn get-names [doc]
-  (let [
-        first-names (map (fn [node]
-                           (trim (last (:content node))))
-                         (html/select doc [:div.fighter-first-name]))
-        last-names (map (fn [node]
-                           (trim (last (:content node))))
-                         (html/select doc [:div.fighter-last-name]))
-        nicknames (map (fn [node]
-                           (trim (last (:content node))))
-                         (html/select doc [:div.fighter-nickname]))
-        ]
+  (let [select-and-trim (fn [selector] (map (fn [node]
+                                              (trim (last (:content node))))
+                                            (html/select doc selector)))
+        first-names (select-and-trim [:div.fighter-first-name])
+        last-names (select-and-trim [:div.fighter-last-name])
+        nicknames (select-and-trim [:div.fighter-nickname])]
     (map (fn [a b c]
            {:nickname a
             :first-name b
             :last-name c})
-           nicknames
+         nicknames
          first-names
-         last-names)
-    ;last-names
-    ))
+         last-names)))
 
 (defn get-fight [url]
   ;(let [body (fetch-url "http://www.ufc.com/event/UFC165")
