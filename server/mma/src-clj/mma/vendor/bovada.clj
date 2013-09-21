@@ -18,7 +18,7 @@
                             false
                             true))
                         raw-names)
-          odds (map html/text (html/select body [:a.lineOdd]))
+          odds (map #(Integer/parseInt (html/text %)) (html/select body [:a.lineOdd]))
           ]
       (partition 2 (map vector names odds))
       )))
