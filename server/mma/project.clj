@@ -15,6 +15,7 @@
                  [clj-http "0.6.3"]
                  [org.clojure/data.json "0.2.1"]
                  [hiccup "1.0.1"]
+                 [enlive "1.1.4"]
                  ]
   :source-paths ["src-clj"]
   :min-lein-version "2.0.0"

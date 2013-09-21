@@ -1,7 +1,7 @@
 (ns mma.core
-  (:use [compojure.core
+  (:use [compojure.core]
          [ring.adapter.jetty :only [run-jetty]]
-         ])
+         )
   (:require [compojure.handler :as handler]
             [ring.server.standalone :as ring-server]
             )
