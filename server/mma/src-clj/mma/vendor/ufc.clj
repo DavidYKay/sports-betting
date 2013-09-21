@@ -21,15 +21,26 @@
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
         record  (split (trim (html/text (first (html/select body [:#fighter-skill-record]))) ) #"-")
 
-        weight (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-weight]))) #" ")))
+        weight (Integer/parseInt (nth (split (html/text (first (html/select body [:#fighter-weight]))) #" ") 3))
+        height (Integer/parseInt (last (re-matches #".+ (\d+) cm .*" (html/text (first (html/select body [:#fighter-height]))))))
         age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
         hometown (trim (string/replace (html/text (first (html/select body [:#fighter-from]))) #"\s+" " "))
+        lives-in (trim (string/replace (html/text (first (html/select body [:#fighter-lives-in]))) #"\s+" " "))
+
+        final-result {:skills skills
+                      :record record
+                      :weight weight
+                      :height height
+                      :age age
+                      :hometown hometown
+                      :lives-in lives-in
+                      }
         ]
-    {:skills skills
-     :record record
-     :weight weight
-     :age age
-     :hometown hometown}))
+    ;weight
+    ;height
+    ;lives-in
+    final-result
+    ))
 
 (defn get-names [doc]
   (let [select-and-trim (fn [selector] (map (fn [node]
