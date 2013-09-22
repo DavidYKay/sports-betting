@@ -14,7 +14,6 @@
   (mg/disconnect!)
   )
 
-
 (defn run-mongo []
   (mg/connect!)
 

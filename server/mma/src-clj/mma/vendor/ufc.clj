@@ -13,8 +13,13 @@
 (def DEFAULT-FIGHT-URL "http://www.ufc.com/event/UFC165")
 (def DEFAULT-FIGHTER-URL "http://www.ufc.com/fighter/Jon-Jones")
 
-(defn get-fighter [url]
-  (let [body (fetch-url url)
+(defn- dash-name [n]
+  (clojure.string/replace n " " "-"))
+
+(defn get-fighter [n]
+  (let [dashed-name (dash-name n)
+        url (str UFC-ROOT "/fighter/" dashed-name)
+        body (fetch-url url)
         fighter-name (html/text (first (html/select body [:#fighter-breadcrumb :h1])))
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
         record  ((fn [r]
@@ -120,6 +125,7 @@
                            ;link
                            (get-fighter link)
                            ))
-                       matches)
-        ]
+                       matches)]
     opponents))
+
+
