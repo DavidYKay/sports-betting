@@ -14,7 +14,11 @@
 (defn get-fighter [url]
   (let [body (fetch-url url)
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
-        record  (split (trim (html/text (first (html/select body [:#fighter-skill-record]))) ) #"-")
+        record  ((fn [r]
+                   (let [[w l t] r] {:win w
+                                     :loss l
+                                     :tie t}))
+                        (split (trim (html/text (first (html/select body [:#fighter-skill-record]))) ) #"-"))
         weight (Integer/parseInt (nth (split (html/text (first (html/select body [:#fighter-weight]))) #" ") 3))
         height (Integer/parseInt (last (re-matches #".+ (\d+) cm .*" (html/text (first (html/select body [:#fighter-height]))))))
         age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
@@ -53,7 +57,17 @@
                       :age age
                       :hometown hometown
                       :lives-in lives-in
-                      :matches (map vector match-opponents opponent-links match-dates outcomes match-methods)
+                      :matches (map (fn [opponent opponent-link date outcome method]
+                                      {:opponent        opponent
+                                       :opponent-link   opponent-link
+                                       :date            date
+                                       :outcome         outcome
+                                       :method          method})
+                                      match-opponents
+                                      opponent-links
+                                      match-dates
+                                      outcomes
+                                      match-methods)
                       }]
     final-result
     ;opponent-links
@@ -81,7 +95,13 @@
         stats (zipmap
                 (map html/text stat-titles)
                 (partition 2 (map html/text stat-texts)))
-        names (get-names body)
-        ]
+        names (get-names body)]
       {:stats stats
        :names names}))
+
+(defn get-fighter-opponents
+  "Fetch details on all the fighters that this fighter has fought"
+  [fighter]
+
+
+  )
