@@ -12,9 +12,14 @@
     (join " " pieces)))
 
 (defn match-names [a b]
-  (let [without-nicks (map strip-nickname a b)]
+  (let [without-nicks (map strip-nickname [a b])]
+    (println "matching name a: "
+             (first without-nicks))
+    (println "matching name b: "
+             (last without-nicks))
     (cond
-      (= a b) true
+      (= a b) => true
+      :default => false
       )))
 
 (defn remove-whitespace [s]

@@ -4,7 +4,9 @@
             [clojure.string :as string]
             )
   (:use [clojure.string :only [split trim]]
-        [mma.vendor.common])
+        [mma.vendor.common]
+        [mma.util :only [strip-nickname]]
+        )
   )
 
 (defn get-all-odds []
@@ -26,7 +28,8 @@
 (defn get-odds-for-fighter [n]
   (let [all-odds (get-all-odds)
         fighter-matches? (fn [fighter] (let [fighter-name (first fighter)]
-                                         (if (= fighter-name n)
+                                         (if (= (strip-nickname fighter-name)
+                                                (strip-nickname n))
                                            true
                                            false)))
         filtered-odds (filter (fn [fight]
