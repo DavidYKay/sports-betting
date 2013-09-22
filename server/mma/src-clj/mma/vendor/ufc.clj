@@ -31,13 +31,21 @@
                                         (first (:content outcome))))))
                     (html/select body [:.result]))
 
-        match-methods (map (fn [node]
+        match-methods (map (fn [v]
+                        (let [[round method modifier] v
+                              base {:round round
+                                    :method method}
+                              ]
+                          (if (nil? modifier)
+                            base
+                            (conj base {:modifier modifier }))))
+                        (map (fn [node]
                              (let [finishing-s (remove-whitespace (html/text node))
 
                                    pieces (string/split (string/replace finishing-s #"-" "") #" ")]
                                (remove string/blank? pieces)
                                ))
-                           (html/select body [:.fighter1 :.method]))
+                           (html/select body [:.fighter1 :.method])))
 
         match-opponents (let [raw-fighters (map #(remove-whitespace (html/text %))
                                            (html/select body [:.fighter]))
