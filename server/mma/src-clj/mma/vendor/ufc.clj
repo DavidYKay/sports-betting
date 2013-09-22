@@ -38,10 +38,11 @@
         match-opponents (let [raw-fighters (map #(remove-whitespace (html/text %))
                                            (html/select body [:.fighter]))
                              most-common (first (last (sort-by val (frequencies raw-fighters))))
-                             fighters (remove #(= most-common %) raw-fighters)
-                             ]
-                         fighters
-                         )
+                             fighters (remove #(= most-common %) raw-fighters)]
+                         fighters)
+
+        match-dates (map #(remove-whitespace (nth (:content %) 2))
+                        (html/select body [:.fighter1 :.event]))
 
         final-result {:skills skills
                       :record record
@@ -50,11 +51,10 @@
                       :age age
                       :hometown hometown
                       :lives-in lives-in
-                      :matches (map vector match-opponents outcomes match-methods)
+                      :matches (map vector match-opponents match-dates outcomes match-methods)
                       }]
     final-result
-    ;match-opponent
-    ;outcomes
+    ;match-date
     ))
 
 (defn get-names [doc]
