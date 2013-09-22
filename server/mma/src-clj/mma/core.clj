@@ -20,8 +20,7 @@
           (include-js (str "/js/bootstrap.js"))
           ]
          [:h1 "WELCOME TO DIE"]
-         [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600
-                }]
+         [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600 }]
 
          [:button "Test"]
          [:ul
