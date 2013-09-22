@@ -18,7 +18,9 @@
 
 (defn get-fighter [n]
   (let [dashed-name (dash-name n)
-        url (str UFC-ROOT "/fighter/" dashed-name)
+        url (if (.startsWith n "http")
+              n
+              (str UFC-ROOT "/fighter/" dashed-name))
         body (fetch-url url)
         fighter-name (html/text (first (html/select body [:#fighter-breadcrumb :h1])))
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
@@ -121,8 +123,12 @@
   [fighter]
   (let [matches (:matches fighter)
         opponents (map (fn [match]
-                         (let [link (str UFC-ROOT (:opponent-link match))]
+                         (let [
+                               link (str UFC-ROOT (:opponent-link match))
+                               fighter-name (:opponent match)
+                               ]
                            ;link
+                           ;(get-fighter fighter-name)
                            (get-fighter link)
                            ))
                        matches)]
