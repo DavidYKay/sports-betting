@@ -7,7 +7,6 @@
         [mma.vendor.common])
   )
 
-
 (defn get-all-odds []
   (binding [clj-http.core/*cookie-store* (clj-http.cookies/cookie-store)]
     (let [body (html-string (:body (client/get "http://sports.bovada.lv/sports-betting/mixed-martial-arts.jsp")))
