@@ -41,6 +41,8 @@
                              fighters (remove #(= most-common %) raw-fighters)]
                          fighters)
 
+        opponent-links (map #(:href (:attrs %)) (html/select body [:.fighter :a]))
+
         match-dates (map #(remove-whitespace (nth (:content %) 2))
                         (html/select body [:.fighter1 :.event]))
 
@@ -51,10 +53,10 @@
                       :age age
                       :hometown hometown
                       :lives-in lives-in
-                      :matches (map vector match-opponents match-dates outcomes match-methods)
+                      :matches (map vector match-opponents opponent-links match-dates outcomes match-methods)
                       }]
     final-result
-    ;match-date
+    ;opponent-links
     ))
 
 (defn get-names [doc]
