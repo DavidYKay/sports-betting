@@ -66,14 +66,15 @@
 
 (defn web-odds-to-odds [web-odds fight]
   (let [fighters (:fighters fight)
-        ; names (map #(strip-nickname (:name %)) fighters)
         [[_ a] [_ b]] web-odds]
     (if (nil? web-odds)
-      (UnknownOdds.)
+      (do
+        (println "WTF!!!!!!")
+        (UnknownOdds.)
+        )
       (do
         (println "converting web odds: " web-odds)
         (AmericanOdds. a b)))))
-    ; (AmericanOdds. b a)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Code

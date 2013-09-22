@@ -34,12 +34,13 @@
        (let [fight {:fighters [{:name fighter-a} {:name fighter-b} ]}
              should-i-bet (engine/should-i-bet? fight)
              ]
+         (println "Bet reccos: " should-i-bet)
          (html5
            [:h1 (str fighter-a " vs " fighter-b)]
 
            [:h3 "Fight Recommendations:"]
 
-           [:p should-i-bet]
+           [:p (str should-i-bet)]
            )))
 
   (route/resources "/")
