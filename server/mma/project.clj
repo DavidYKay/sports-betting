@@ -17,6 +17,7 @@
                  [org.clojure/data.json "0.2.1"]
                  [hiccup "1.0.1"]
                  [enlive "1.1.4"]
+                 [com.novemberain/monger "1.5.0"]
                  ]
   :source-paths ["src-clj"]
   :min-lein-version "2.0.0"
