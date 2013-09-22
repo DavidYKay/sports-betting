@@ -36,6 +36,9 @@
 (defn save-fighter! [fighter]
   (mc/insert "fighters" fighter))
 
-(defn has-fighter? [fighter-name]
+(defn get-fighter [fighter-name]
   (mc/find-one-as-map "fighters"
                       { :name fighter-name }))
+
+(defn has-fighter? [fighter-name]
+  (not (nil? (get-fighter fighter-name))))
