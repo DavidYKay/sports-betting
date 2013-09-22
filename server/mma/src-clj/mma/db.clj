@@ -5,6 +5,15 @@
   (:import [com.mongodb MongoOptions ServerAddress]
            [org.bson.types ObjectId]))
 
+(defn connect! []
+  (mg/connect!)
+  (mg/set-db! (mg/get-db "ufc"))
+  )
+
+(defn disconnect! []
+  (mg/disconnect!)
+  )
+
 
 (defn run-mongo []
   (mg/connect!)
@@ -29,5 +38,4 @@
 
 (defn has-fighter? [fighter-name]
   (mc/find-one-as-map "fighters"
-                      { :_id (ObjectId. "4ec2d1a6b55634a935ea4ac8") })
-  )
+                      { :name fighter-name }))
