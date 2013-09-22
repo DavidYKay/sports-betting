@@ -5,6 +5,7 @@
          )
   (:require [compojure.handler :as handler]
             [ring.server.standalone :as ring-server]
+            [compojure.route :as route]
             )
   )
 
@@ -13,15 +14,28 @@
 
   (GET "/fight-detail" []
        (html5
+         [:head
+          [:title "Fight Detail Page"]
+          (include-css (str "/css/bootstrap.css"))
+          (include-js (str "/js/bootstrap.js"))
+          ]
          [:h1 "WELCOME TO DIE"]
-         [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg"}]
+         [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600
+                }]
+
+         [:button "Test"]
          [:ul
-          (for [x (range 20)]
+          (for [x (range 10)]
             [:li x])]))
+
+  (route/resources "/")
   )
 
 (def app
-  (handler/site app-routes))
+  (handler/site app-routes)
+
+
+  )
 
 (defn run-app []
   "Runs the web server"
