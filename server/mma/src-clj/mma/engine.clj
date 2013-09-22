@@ -82,7 +82,9 @@
 
 (defn predict-fight [fight]
   (let [fighters (:fighters fight)
-        sentiments (map #(:score (sentiment/get-sentiment (strip-nickname (:name %)))) fighters)
+        raw-sentiments (map #(sentiment/get-sentiment (strip-nickname (:name %))) fighters)
+        ; TODO: order these guys properly to correspond with A and B
+        sentiments (map :score raw-sentiments)
         [a b] (sentiment-to-percentage (first sentiments) (last sentiments))
         ]
     (PercentOdds. a b)))
