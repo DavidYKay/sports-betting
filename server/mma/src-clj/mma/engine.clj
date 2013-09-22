@@ -53,6 +53,13 @@
   (b-wins? [x]
     b))
 
+(deftype UnknownOdds []
+  Odds
+  (a-wins? [x]
+    0.5)
+  (b-wins? [x]
+    0.5))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Converter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,7 +68,11 @@
   (let [fighters (:fighters fight)
         ; names (map #(strip-nickname (:name %)) fighters)
         [[_ a] [_ b]] web-odds]
-    (AmericanOdds. a b)))
+    (if (nil? web-odds)
+      (UnknownOdds.)
+      (do
+        (println "converting web odds: " web-odds)
+        (AmericanOdds. a b)))))
     ; (AmericanOdds. b a)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -84,17 +95,17 @@
   (let [fighters (:fighters fight)
         raw-sentiments (map #(sentiment/get-sentiment (strip-nickname (:name %))) fighters)
         ; TODO: order these guys properly to correspond with A and B
-        sentiments (map :score raw-sentiments)
-        [a b] (sentiment-to-percentage (first sentiments) (last sentiments))
         ]
-    (PercentOdds. a b)))
+    (println "checking sentiments: " raw-sentiments)
+    (if (contains? (reduce merge raw-sentiments) :error)
+      (UnknownOdds.)
+      (let [sentiments (map :score raw-sentiments)
+            [a b] (sentiment-to-percentage (first sentiments) (last sentiments))]
+        (PercentOdds. a b)))))
 
 (defn get-odds [fight]
   (let [web-odds (bovada/get-odds fight)]
     (web-odds-to-odds web-odds fight)))
-  ;(FractionalOdds. "4:1" "1:6")
-  ;;(AmericanOdds. "" ""
-  ;)
 
 (defn should-i-bet? [fight]
   (let [prediction (predict-fight fight)

@@ -6,6 +6,8 @@
   (:require [compojure.handler :as handler]
             [ring.server.standalone :as ring-server]
             [compojure.route :as route]
+            [mma.engine :as engine]
+            [mma.env :as env]
             )
   )
 
@@ -27,14 +29,27 @@
           (for [x (range 10)]
             [:li x])]))
 
+  (GET "/fight-details" {{fighter-a :fighter-a
+                          fighter-b :fighter-b} :params}
+       (let [fight {:fighters [{:name fighter-a} {:name fighter-b} ]}
+             should-i-bet (engine/should-i-bet? fight)
+             ]
+         (html5
+           [:h1 (str fighter-a " vs " fighter-b)]
+
+           [:h3 "Fight Recommendations:"]
+
+           [:p should-i-bet]
+           )))
+
   (route/resources "/")
   )
 
 (def app
-  (handler/site app-routes)
-
-
-  )
+  (do
+    (env/set-proxy)
+    (handler/site app-routes)
+    ))
 
 (defn run-app []
   "Runs the web server"

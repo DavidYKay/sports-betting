@@ -15,7 +15,8 @@
     (println "getting sentiment for fighter: " fighter-name)
     (let [response (client/get (str "http://1.crumbsbot.appspot.com/tweetsentiments?q=" (url-encode fighter-name)))
           ]
-      (if (< (:status response) 300)
+      (if (and (< (:status response) 300)
+               (not (string/blank? (:body response))))
         (let [json (clojure.walk/keywordize-keys (read-str (:body response)))
               cleaned (conj json {:score (read-string (:score json))})]
           cleaned)
