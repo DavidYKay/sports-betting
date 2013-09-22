@@ -4,7 +4,7 @@
             [clojure.string :as string]
             )
   (:use [mma.vendor.common]
-        [clojure.string :only [split trim]])
+        [clojure.string :only [split trim lower-case]])
   )
 
 (def DEFAULT-FIGHT-URL "http://www.ufc.com/event/UFC165")
@@ -20,6 +20,14 @@
         hometown (trim (string/replace (html/text (first (html/select body [:#fighter-from]))) #"\s+" " "))
         lives-in (trim (string/replace (html/text (first (html/select body [:#fighter-lives-in]))) #"\s+" " "))
 
+
+        raw-fights (html/select body [:.result])
+        fights (map (fn [res]
+                      (let [outcome (second (:content res))]
+                        (lower-case (or (:class (:attrs outcome))
+                                        (first (:content outcome))))))
+                    raw-fights)
+
         final-result {:skills skills
                       :record record
                       :weight weight
@@ -27,10 +35,8 @@
                       :age age
                       :hometown hometown
                       :lives-in lives-in}]
-    ;weight
-    ;height
-    ;lives-in
-    final-result
+    ;final-result
+    fights
     ))
 
 (defn get-names [doc]
