@@ -31,9 +31,13 @@
   (mg/disconnect!)
   )
 
+(defn get-all-fighters []
+  (mc/find-maps "fighters"))
 
 (defn save-fighter! [fighter]
-  (mc/insert "fighters" fighter))
+  (if (nil? fighter)
+    nil
+    (mc/insert "fighters" fighter)))
 
 (defn get-fighter [fighter-name]
   (mc/find-one-as-map "fighters"

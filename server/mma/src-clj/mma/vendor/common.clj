@@ -4,7 +4,10 @@
 )
 
 (defn fetch-url [url]
-  (html/html-resource (java.net.URL. url)))
+  (try
+    (html/html-resource (java.net.URL. url))
+    (catch Exception e
+      {:error (str "caught exception: " (.getMessage e))})))
 
 (defn to-text [nodes]
   (map (fn [x] (trim (html/text x)))
