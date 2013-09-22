@@ -8,6 +8,8 @@
         [clojure.string :only [split trim lower-case]])
   )
 
+(def UFC-ROOT "http://www.ufc.com")
+
 (def DEFAULT-FIGHT-URL "http://www.ufc.com/event/UFC165")
 (def DEFAULT-FIGHTER-URL "http://www.ufc.com/fighter/Jon-Jones")
 
@@ -26,16 +28,16 @@
         lives-in (remove-whitespace (html/text (first (html/select body [:#fighter-lives-in]))))
 
         outcomes (map (fn [res]
-                      (let [outcome (second (:content res))]
-                        (lower-case (or (:class (:attrs outcome))
-                                        (first (:content outcome))))))
-                    (html/select body [:.result]))
+                        (let [outcome (second (:content res))]
+                          (lower-case (or (:class (:attrs outcome))
+                                          (first (:content outcome))
+                                          "unknown"))))
+                      (html/select body [:.result]))
 
         match-methods (map (fn [v]
                         (let [[round method modifier] v
                               base {:round round
-                                    :method method}
-                              ]
+                                    :method method}]
                           (if (nil? modifier)
                             base
                             (conj base {:modifier modifier }))))
@@ -110,6 +112,12 @@
 (defn get-fighter-opponents
   "Fetch details on all the fighters that this fighter has fought"
   [fighter]
-
-
-  )
+  (let [matches (:matches fighter)
+        opponents (map (fn [match]
+                         (let [link (str UFC-ROOT (:opponent-link match))]
+                           ;link
+                           (get-fighter link)
+                           ))
+                       matches)
+        ]
+    opponents))
