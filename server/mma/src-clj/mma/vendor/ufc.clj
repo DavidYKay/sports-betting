@@ -4,6 +4,7 @@
             [clojure.string :as string]
             )
   (:use [mma.vendor.common]
+        [mma.util :only [remove-whitespace]]
         [clojure.string :only [split trim lower-case]])
   )
 
@@ -17,16 +18,22 @@
         weight (Integer/parseInt (nth (split (html/text (first (html/select body [:#fighter-weight]))) #" ") 3))
         height (Integer/parseInt (last (re-matches #".+ (\d+) cm .*" (html/text (first (html/select body [:#fighter-height]))))))
         age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
-        hometown (trim (string/replace (html/text (first (html/select body [:#fighter-from]))) #"\s+" " "))
-        lives-in (trim (string/replace (html/text (first (html/select body [:#fighter-lives-in]))) #"\s+" " "))
+        hometown (remove-whitespace (html/text (first (html/select body [:#fighter-from]))))
+        lives-in (remove-whitespace (html/text (first (html/select body [:#fighter-lives-in]))))
 
-
-        raw-fights (html/select body [:.result])
-        fights (map (fn [res]
+        outcomes (map (fn [res]
                       (let [outcome (second (:content res))]
                         (lower-case (or (:class (:attrs outcome))
                                         (first (:content outcome))))))
-                    raw-fights)
+                    (html/select body [:.result]))
+
+        match-methods (map (fn [node]
+                             (let [finishing-s (remove-whitespace (html/text node))
+
+                                   pieces (string/split (string/replace finishing-s #"-" "") #" ")]
+                               (remove string/blank? pieces)
+                               ))
+                           (html/select body [:.fighter1 :.method]))
 
         final-result {:skills skills
                       :record record
@@ -34,9 +41,11 @@
                       :height height
                       :age age
                       :hometown hometown
-                      :lives-in lives-in}]
-    ;final-result
-    fights
+                      :lives-in lives-in
+                      :matches (map vector outcomes match-methods)
+                      }]
+    final-result
+    ;outcomes
     ))
 
 (defn get-names [doc]

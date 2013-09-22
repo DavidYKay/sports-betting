@@ -1,5 +1,6 @@
 (ns mma.util
   (:use [clojure.string :only [trim join]])
+  (:require [clojure.string :as string])
   )
 
 (defn strip-nickname [n]
@@ -12,3 +13,6 @@
     (cond
       (= a b) true
       )))
+
+(defn remove-whitespace [s]
+  (trim (string/replace s #"\s+" " ")))
