@@ -4,9 +4,12 @@
   )
 
 (defn strip-nickname [n]
-  (let [pieces (map trim (clojure.string/split n #"\""))
+  (let [
+        ; matches nicknames and bare names
+        raw-pieces (re-matches #"(\w+)( \".+\")? (.+)" n)
+        pieces (vector (nth raw-pieces 1) (last raw-pieces))
         ]
-    (join " " (vector (first pieces) (last pieces)))))
+    (join " " pieces)))
 
 (defn match-names [a b]
   (let [without-nicks (map strip-nickname a b)]

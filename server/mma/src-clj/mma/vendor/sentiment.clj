@@ -11,12 +11,14 @@
   )
 
 (defn get-sentiment [fighter-name]
-  (let [response (client/get (str "http://1.crumbsbot.appspot.com/tweetsentiments?q=" (url-encode fighter-name)))
-        ]
-    (if (< (:status response) 300)
-      (let [json (clojure.walk/keywordize-keys (read-str (:body response)))
-            cleaned (conj json {:score (read-string (:score json))})]
-        cleaned)
-      {:error "Failed to fetch sentiment"
-       :status  (:status response)}
-      )))
+  (do
+    (println "getting sentiment for fighter: " fighter-name)
+    (let [response (client/get (str "http://1.crumbsbot.appspot.com/tweetsentiments?q=" (url-encode fighter-name)))
+          ]
+      (if (< (:status response) 300)
+        (let [json (clojure.walk/keywordize-keys (read-str (:body response)))
+              cleaned (conj json {:score (read-string (:score json))})]
+          cleaned)
+        {:error "Failed to fetch sentiment"
+         :status  (:status response)}
+        ))))

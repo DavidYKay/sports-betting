@@ -1,5 +1,8 @@
 (ns mma.engine
-  (:use [clojure.string :only [split trim]])
+  (:use
+    [clojure.string :only [split trim]]
+    [mma.util :only [strip-nickname]]
+        )
   (:require [mma.vendor.sentiment :as sentiment]
             [mma.vendor.bovada :as bovada]
             [clojure.string :as string]
@@ -79,7 +82,7 @@
 
 (defn predict-fight [fight]
   (let [fighters (:fighters fight)
-        sentiments (map #(:score (sentiment/get-sentiment (:name %))) fighters)
+        sentiments (map #(:score (sentiment/get-sentiment (strip-nickname (:name %)))) fighters)
         [a b] (sentiment-to-percentage (first sentiments) (last sentiments))
         ]
     (PercentOdds. a b)))
