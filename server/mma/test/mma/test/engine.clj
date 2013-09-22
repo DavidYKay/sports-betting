@@ -30,3 +30,18 @@
         (b-wins? odds) => 1/7
         )
       )
+
+(fact "Converts from sentimnt to odds"
+      ;(let [sentiments [0.4 -0.2]
+            ;[a b] (sentiment-to-percentage (first sentiments) (last sentiments))]
+        ;a => (roughly 2/3)
+        ;b => (roughly 1/3)
+        ;)
+
+      (let [
+            sentiments [0.24 0.85]
+            [a b] (sentiment-to-percentage (first sentiments) (last sentiments))]
+        a => (roughly 0.305)
+        b => (roughly 0.695)
+        )
+      )

@@ -1,6 +1,7 @@
 (ns mma.engine
   (:use [clojure.string :only [split trim]])
-  (:require [clojure.string :as string]
+  (:require [mma.vendor.sentiment :as sentiment]
+            [clojure.string :as string]
             [clojure.math.numeric-tower :as math])
   )
 
@@ -53,9 +54,27 @@
 ; Code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn pythagorean [a b]
+  (math/sqrt
+    (+ (* a a) (* b b))))
+
+(defn sentiment-to-percentage [a b]
+  (let [raw-score (/ (math/abs (- b a))
+                      (math/sqrt 2))
+        max-score (math/sqrt 2)
+        percentage (/ raw-score max-score)
+        inverse (- 1 percentage)]
+      [percentage inverse]))
+
 (defn predict-fight [fight]
-  (PercentOdds. 0.60 0.40)
-  )
+  (let [fighters (:fighters fight)
+        sentiments (map #(:score (sentiment/get-sentiment (:name %))) fighters)
+        [a b] (sentiment-to-percentage (first sentiments) (last sentiments))
+        ]
+    ; (PercentOdds. 0.60 0.40)
+    ;(PercentOdds. a b)
+    [a b]
+    ))
 
 (defn get-odds [fight]
   (FractionalOdds. "4:1" "1:6")
