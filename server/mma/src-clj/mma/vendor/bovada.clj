@@ -24,8 +24,10 @@
       )))
 
 (defn get-odds [fight]
-
-)
+  (let [fighters (:fighters fight)
+        odds (concat (map #(get-odds-for-fighter (:name %)) fighters))
+        most-common (ffirst (last (sort-by val (frequencies odds))))]
+    most-common))
 
 (defn get-odds-for-fighter [n]
   (let [all-odds (get-all-odds)

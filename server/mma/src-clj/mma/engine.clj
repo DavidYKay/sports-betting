@@ -56,10 +56,7 @@
 
 (defn web-odds-to-odds [web-odds fight]
   (let [fighters (:fighters fight)
-
-
         ; names (map #(strip-nickname (:name %)) fighters)
-
         [[_ a] [_ b]] web-odds]
     (AmericanOdds. a b)))
     ; (AmericanOdds. b a)
