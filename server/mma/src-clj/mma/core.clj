@@ -8,8 +8,20 @@
             [compojure.route :as route]
             [mma.engine :as engine]
             [mma.env :as env]
+            [clj-style.core :as cs]
             )
   )
+
+(cs/defrule  div-foo
+  [:div#foo
+   :margin "0px"
+   [:span.bar
+    :color "red"
+    :font-weight "bold"
+    [:a:hover
+     :text-decoration "none"]]])
+
+div-foo
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
@@ -21,8 +33,11 @@
           (include-css (str "/css/bootstrap.css"))
           (include-js (str "/js/bootstrap.js"))
           ]
-         [:h1 "WELCOME TO DIE"]
+         [:h1 "Choose your fighter!"]
          [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600 }]
+         [:as "VS"]
+         [:img {:src "http://static.giantbomb.com/uploads/original/3/34651/1814401-juggernaut.png" :width 400 :height 600 }]
+
 
          [:button "Test"]
          [:ul
