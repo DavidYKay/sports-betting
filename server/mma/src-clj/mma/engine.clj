@@ -122,4 +122,5 @@
      :prediction {:a (a-wins? prediction)
                   :b (b-wins? prediction)}
      :odds {:a (a-wins? odds)
-            :b (b-wins? odds)}}))
+            :b (b-wins? odds)}
+     :fight fight}))

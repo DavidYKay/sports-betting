@@ -26,8 +26,7 @@
               :else (str UFC-ROOT "/fighter/" dashed-name))
         body (fetch-url url)
         ]
-    (if (or (seq? body)
-            (contains? body :error))
+    (if (and (map? body) (contains? body :error))
       (do
         (println "BODY was: " body)
         nil
@@ -44,6 +43,7 @@
             age (Integer/parseInt (first (split (html/text (first (html/select body [:#fighter-age]))) #" ")))
             hometown (remove-whitespace (html/text (first (html/select body [:#fighter-from]))))
             lives-in (remove-whitespace (html/text (first (html/select body [:#fighter-lives-in]))))
+            picture (:src (:attrs (first (html/select body [:.fighter-banner :.fighter-image :img]))))
 
             outcomes (map (fn [res]
                             (let [outcome (second (:content res))]
@@ -86,6 +86,7 @@
                           :name fighter-name
                           :hometown hometown
                           :lives-in lives-in
+                          :picture picture
                           :matches (map (fn [opponent opponent-link date outcome method]
                                           {:opponent        opponent
                                            :opponent-link   opponent-link
@@ -99,6 +100,7 @@
                                         match-methods)
                           }]
         final-result
+        ;picture
         ;opponent-links
         ))))
 
