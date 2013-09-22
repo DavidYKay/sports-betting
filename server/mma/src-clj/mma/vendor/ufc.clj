@@ -15,6 +15,7 @@
 
 (defn get-fighter [url]
   (let [body (fetch-url url)
+        fighter-name (html/text (first (html/select body [:#fighter-breadcrumb :h1])))
         skills  (map trim (split (html/text (first (html/select body [:#fighter-skill-summary]))) #","))
         record  ((fn [r]
                    (let [[w l t] r] {:win w
@@ -65,6 +66,7 @@
                       :weight weight
                       :height height
                       :age age
+                      :name fighter-name
                       :hometown hometown
                       :lives-in lives-in
                       :matches (map (fn [opponent opponent-link date outcome method]
