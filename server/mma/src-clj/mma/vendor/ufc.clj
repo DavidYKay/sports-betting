@@ -14,7 +14,9 @@
 (def DEFAULT-FIGHTER-URL "http://www.ufc.com/fighter/Jon-Jones")
 
 (defn- dash-name [n]
-  (clojure.string/replace n " " "-"))
+  (clojure.string/replace
+    (clojure.string/replace n " " "-")
+    "'" "-"))
 
 (defn get-fighter [n]
   (let [dashed-name (dash-name n)
