@@ -29,9 +29,14 @@
         (a-wins? odds) => 2/3
         (b-wins? odds) => 1/7
         )
+
+      (let [odds (AmericanOdds. -240 190)]
+        (a-wins? odds) => 240/340
+        (b-wins? odds) => 100/290
+        )
       )
 
-(fact "Converts from sentimnt to odds"
+(fact "Converts from sentiment to odds"
       ;(let [sentiments [0.4 -0.2]
             ;[a b] (sentiment-to-percentage (first sentiments) (last sentiments))]
         ;a => (roughly 2/3)

@@ -1,6 +1,7 @@
 (ns mma.engine
   (:use [clojure.string :only [split trim]])
   (:require [mma.vendor.sentiment :as sentiment]
+            [mma.vendor.bovada :as bovada]
             [clojure.string :as string]
             [clojure.math.numeric-tower :as math])
   )
@@ -19,11 +20,10 @@
        (reduce + terms))))
 
 (defn- american-to-percent [american]
-  (let [divided (math/abs (/ american 100))]
+  (let [abs-val (math/abs american)]
     (if (pos? american)
-      (fractional-to-percent (string/join ":" [divided 1]))
-      (fractional-to-percent (string/join ":" [1 divided]))
-      )))
+      (/ 100 (+ 100 abs-val))
+      (/ abs-val (+ 100 abs-val)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Implementations
@@ -51,6 +51,20 @@
     b))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Converter
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn web-odds-to-odds [web-odds fight]
+  (let [fighters (:fighters fight)
+
+
+        ; names (map #(strip-nickname (:name %)) fighters)
+
+        [[_ a] [_ b]] web-odds]
+    (AmericanOdds. a b)))
+    ; (AmericanOdds. b a)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -71,15 +85,14 @@
         sentiments (map #(:score (sentiment/get-sentiment (:name %))) fighters)
         [a b] (sentiment-to-percentage (first sentiments) (last sentiments))
         ]
-    ; (PercentOdds. 0.60 0.40)
-    ;(PercentOdds. a b)
-    [a b]
-    ))
+    (PercentOdds. a b)))
 
 (defn get-odds [fight]
-  (FractionalOdds. "4:1" "1:6")
-  ;(AmericanOdds. "" ""
-  )
+  (let [web-odds (bovada/get-odds fight)]
+    (web-odds-to-odds web-odds fight)))
+  ;(FractionalOdds. "4:1" "1:6")
+  ;;(AmericanOdds. "" ""
+  ;)
 
 (defn should-i-bet? [fight]
   (let [prediction (predict-fight fight)
