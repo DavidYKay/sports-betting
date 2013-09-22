@@ -27,22 +27,7 @@ div-foo
   (GET "/" [] "Hello World")
 
   (GET "/fight-detail" []
-       (html5
-         [:head
-          [:title "Fight Detail Page"]
-          (include-css (str "/css/bootstrap.css"))
-          (include-js (str "/js/bootstrap.js"))
-          ]
-         [:h1 "Choose your fighter!"]
-         [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600 }]
-         [:as "VS"]
-         [:img {:src "http://static.giantbomb.com/uploads/original/3/34651/1814401-juggernaut.png" :width 400 :height 600 }]
-
-
-         [:button "Test"]
-         [:ul
-          (for [x (range 10)]
-            [:li x])]))
+       "hello world")
 
   (GET "/fight-details" {{fighter-a :fighter-a
                           fighter-b :fighter-b} :params}
@@ -51,12 +36,31 @@ div-foo
              ]
          (println "Bet reccos: " should-i-bet)
          (html5
-           [:h1 (str fighter-a " vs " fighter-b)]
+           [:head
+            [:title "Fight Detail Page"]
+            (include-css (str "/css/bootstrap.css"))
+            (include-js (str "/js/bootstrap.js"))
+            ]
+           [:div {:class "row"}
+            [:div {:class "span6"}
 
-           [:h3 "Fight Recommendations:"]
+             [:h1 fighter-a]
+             [:img {:src "http://www.fightersgeneration.com/np6/char/magneto-mvc3.jpg" :width 400 :height 600 }]
 
-           [:p (str should-i-bet)]
-           )))
+             [:h3 (str "Current Betting odds: " (:a (:odds should-i-bet)))]
+             [:h3 (str "Estimated Win Percentage: " (:a (:prediction should-i-bet)))]
+             ]
+            [:div {:class "span6"}
+             [:h1 fighter-b]
+             [:img {:src "http://static.giantbomb.com/uploads/original/3/34651/1814401-juggernaut.png" :width 400 :height 600 }]
+             [:h3 (str "Current Betting odds: " (:b (:odds should-i-bet)))]
+             [:h3 (str "Estimated Win Percentage: " (:b (:prediction should-i-bet)))]
+             ]
+            ]
+           [:button "Test"]
+           [:ul
+            (for [x (range 10)]
+              [:li x])])))
 
   (route/resources "/")
   )
